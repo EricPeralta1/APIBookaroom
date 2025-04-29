@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="bookaroomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Butaca">
+          <Key>
+            <PropertyRef Name="seat_id" />
+          </Key>
+          <Property Name="seat_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="room_id" Type="int" />
+          <Property Name="row_number" Type="int" />
+          <Property Name="seat_number" Type="int" />
+        </EntityType>
+        <EntityType Name="Entrades">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="event_id" Type="int" />
+          <Property Name="seat_id" Type="int" />
+          <Property Name="status" Type="int" />
+        </EntityType>
+        <EntityType Name="Esdeveniments">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="room_id" Type="int" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="capacity" Type="int" Nullable="false" />
+          <Property Name="start_date" Type="date" Nullable="false" />
+          <Property Name="end_date" Type="date" Nullable="false" />
+          <Property Name="price" Type="float" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="255" />
+          <Property Name="event_image" Type="varchar" MaxLength="255" />
+          <Property Name="active" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inventari">
+          <Key>
+            <PropertyRef Name="inventory_id" />
+          </Key>
+          <Property Name="inventory_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Mensajes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sent_id" Type="int" Nullable="false" />
+          <Property Name="message" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="send_date" Type="datetime" />
+          <Property Name="status" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Sales">
+          <Key>
+            <PropertyRef Name="room_id" />
+          </Key>
+          <Property Name="room_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="inventory_id" Type="int" />
+          <Property Name="dimensions" Type="int" Nullable="false" />
+          <Property Name="max_capacity" Type="int" Nullable="false" />
+          <Property Name="num_seats" Type="int" Nullable="false" />
+          <Property Name="status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuaris">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="surname" Type="varchar" MaxLength="255" />
+          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="255" />
+          <Property Name="active" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Butaca__room_id__412EB0B6">
+          <End Role="Sales" Type="Self.Sales" Multiplicity="0..1" />
+          <End Role="Butaca" Type="Self.Butaca" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sales">
+              <PropertyRef Name="room_id" />
+            </Principal>
+            <Dependent Role="Butaca">
+              <PropertyRef Name="room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__event___49C3F6B7">
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Esdeveniments">
+              <PropertyRef Name="event_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__seat_i__4AB81AF0">
+          <End Role="Butaca" Type="Self.Butaca" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Butaca">
+              <PropertyRef Name="seat_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__user_i__48CFD27E">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Esdevenim__room___440B1D61">
+          <End Role="Sales" Type="Self.Sales" Multiplicity="0..1" />
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sales">
+              <PropertyRef Name="room_id" />
+            </Principal>
+            <Dependent Role="Esdeveniments">
+              <PropertyRef Name="room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Esdevenim__user___44FF419A">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="0..1" />
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Esdeveniments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Mensajes__sent_i__4E88ABD4">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="1" />
+          <End Role="Mensajes" Type="Self.Mensajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Mensajes">
+              <PropertyRef Name="sent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__inventory__3E52440B">
+          <End Role="Inventari" Type="Self.Inventari" Multiplicity="0..1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Inventari">
+              <PropertyRef Name="inventory_id" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="inventory_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bookaroomModelStoreContainer">
+          <EntitySet Name="Butaca" EntityType="Self.Butaca" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Entrades" EntityType="Self.Entrades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Esdeveniments" EntityType="Self.Esdeveniments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Inventari" EntityType="Self.Inventari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mensajes" EntityType="Self.Mensajes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sales" EntityType="Self.Sales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuaris" EntityType="Self.Usuaris" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Butaca__room_id__412EB0B6" Association="Self.FK__Butaca__room_id__412EB0B6">
+            <End Role="Sales" EntitySet="Sales" />
+            <End Role="Butaca" EntitySet="Butaca" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__event___49C3F6B7" Association="Self.FK__Entrades__event___49C3F6B7">
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__seat_i__4AB81AF0" Association="Self.FK__Entrades__seat_i__4AB81AF0">
+            <End Role="Butaca" EntitySet="Butaca" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__user_i__48CFD27E" Association="Self.FK__Entrades__user_i__48CFD27E">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Esdevenim__room___440B1D61" Association="Self.FK__Esdevenim__room___440B1D61">
+            <End Role="Sales" EntitySet="Sales" />
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Esdevenim__user___44FF419A" Association="Self.FK__Esdevenim__user___44FF419A">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Mensajes__sent_i__4E88ABD4" Association="Self.FK__Mensajes__sent_i__4E88ABD4">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Mensajes" EntitySet="Mensajes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__inventory__3E52440B" Association="Self.FK__Sales__inventory__3E52440B">
+            <End Role="Inventari" EntitySet="Inventari" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="bookaroomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Butaca">
+          <Key>
+            <PropertyRef Name="seat_id" />
+          </Key>
+          <Property Name="seat_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="room_id" Type="Int32" />
+          <Property Name="row_number" Type="Int32" />
+          <Property Name="seat_number" Type="Int32" />
+          <NavigationProperty Name="Sales" Relationship="Self.FK__Butaca__room_id__412EB0B6" FromRole="Butaca" ToRole="Sales" />
+          <NavigationProperty Name="Entrades" Relationship="Self.FK__Entrades__seat_i__4AB81AF0" FromRole="Butaca" ToRole="Entrades" />
+        </EntityType>
+        <EntityType Name="Entrades">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="event_id" Type="Int32" />
+          <Property Name="seat_id" Type="Int32" />
+          <Property Name="status" Type="Int32" />
+          <NavigationProperty Name="Butaca" Relationship="Self.FK__Entrades__seat_i__4AB81AF0" FromRole="Entrades" ToRole="Butaca" />
+          <NavigationProperty Name="Esdeveniments" Relationship="Self.FK__Entrades__event___49C3F6B7" FromRole="Entrades" ToRole="Esdeveniments" />
+          <NavigationProperty Name="Usuaris" Relationship="Self.FK__Entrades__user_i__48CFD27E" FromRole="Entrades" ToRole="Usuaris" />
+        </EntityType>
+        <EntityType Name="Esdeveniments">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="room_id" Type="Int32" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="capacity" Type="Int32" Nullable="false" />
+          <Property Name="start_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="end_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="price" Type="Double" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="event_image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Entrades" Relationship="Self.FK__Entrades__event___49C3F6B7" FromRole="Esdeveniments" ToRole="Entrades" />
+          <NavigationProperty Name="Sales" Relationship="Self.FK__Esdevenim__room___440B1D61" FromRole="Esdeveniments" ToRole="Sales" />
+          <NavigationProperty Name="Usuaris" Relationship="Self.FK__Esdevenim__user___44FF419A" FromRole="Esdeveniments" ToRole="Usuaris" />
+        </EntityType>
+        <EntityType Name="Inventari">
+          <Key>
+            <PropertyRef Name="inventory_id" />
+          </Key>
+          <Property Name="inventory_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Sales" Relationship="Self.FK__Sales__inventory__3E52440B" FromRole="Inventari" ToRole="Sales" />
+        </EntityType>
+        <EntityType Name="Mensajes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sent_id" Type="Int32" Nullable="false" />
+          <Property Name="message" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="send_date" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuaris" Relationship="Self.FK__Mensajes__sent_i__4E88ABD4" FromRole="Mensajes" ToRole="Usuaris" />
+        </EntityType>
+        <EntityType Name="Sales">
+          <Key>
+            <PropertyRef Name="room_id" />
+          </Key>
+          <Property Name="room_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="inventory_id" Type="Int32" />
+          <Property Name="dimensions" Type="Int32" Nullable="false" />
+          <Property Name="max_capacity" Type="Int32" Nullable="false" />
+          <Property Name="num_seats" Type="Int32" Nullable="false" />
+          <Property Name="status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Butaca" Relationship="Self.FK__Butaca__room_id__412EB0B6" FromRole="Sales" ToRole="Butaca" />
+          <NavigationProperty Name="Esdeveniments" Relationship="Self.FK__Esdevenim__room___440B1D61" FromRole="Sales" ToRole="Esdeveniments" />
+          <NavigationProperty Name="Inventari" Relationship="Self.FK__Sales__inventory__3E52440B" FromRole="Sales" ToRole="Inventari" />
+        </EntityType>
+        <EntityType Name="Usuaris">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="surname" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Entrades" Relationship="Self.FK__Entrades__user_i__48CFD27E" FromRole="Usuaris" ToRole="Entrades" />
+          <NavigationProperty Name="Esdeveniments" Relationship="Self.FK__Esdevenim__user___44FF419A" FromRole="Usuaris" ToRole="Esdeveniments" />
+          <NavigationProperty Name="Mensajes" Relationship="Self.FK__Mensajes__sent_i__4E88ABD4" FromRole="Usuaris" ToRole="Mensajes" />
+        </EntityType>
+        <Association Name="FK__Butaca__room_id__412EB0B6">
+          <End Role="Sales" Type="Self.Sales" Multiplicity="0..1" />
+          <End Role="Butaca" Type="Self.Butaca" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sales">
+              <PropertyRef Name="room_id" />
+            </Principal>
+            <Dependent Role="Butaca">
+              <PropertyRef Name="room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__seat_i__4AB81AF0">
+          <End Role="Butaca" Type="Self.Butaca" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Butaca">
+              <PropertyRef Name="seat_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__event___49C3F6B7">
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Esdeveniments">
+              <PropertyRef Name="event_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Entrades__user_i__48CFD27E">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="0..1" />
+          <End Role="Entrades" Type="Self.Entrades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Entrades">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Esdevenim__room___440B1D61">
+          <End Role="Sales" Type="Self.Sales" Multiplicity="0..1" />
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sales">
+              <PropertyRef Name="room_id" />
+            </Principal>
+            <Dependent Role="Esdeveniments">
+              <PropertyRef Name="room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Esdevenim__user___44FF419A">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="0..1" />
+          <End Role="Esdeveniments" Type="Self.Esdeveniments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Esdeveniments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__inventory__3E52440B">
+          <End Role="Inventari" Type="Self.Inventari" Multiplicity="0..1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Inventari">
+              <PropertyRef Name="inventory_id" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="inventory_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Mensajes__sent_i__4E88ABD4">
+          <End Role="Usuaris" Type="Self.Usuaris" Multiplicity="1" />
+          <End Role="Mensajes" Type="Self.Mensajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuaris">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Mensajes">
+              <PropertyRef Name="sent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bookaroomEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Butaca" EntityType="Self.Butaca" />
+          <EntitySet Name="Entrades" EntityType="Self.Entrades" />
+          <EntitySet Name="Esdeveniments" EntityType="Self.Esdeveniments" />
+          <EntitySet Name="Inventari" EntityType="Self.Inventari" />
+          <EntitySet Name="Mensajes" EntityType="Self.Mensajes" />
+          <EntitySet Name="Sales" EntityType="Self.Sales" />
+          <EntitySet Name="Usuaris" EntityType="Self.Usuaris" />
+          <AssociationSet Name="FK__Butaca__room_id__412EB0B6" Association="Self.FK__Butaca__room_id__412EB0B6">
+            <End Role="Sales" EntitySet="Sales" />
+            <End Role="Butaca" EntitySet="Butaca" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__seat_i__4AB81AF0" Association="Self.FK__Entrades__seat_i__4AB81AF0">
+            <End Role="Butaca" EntitySet="Butaca" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__event___49C3F6B7" Association="Self.FK__Entrades__event___49C3F6B7">
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Entrades__user_i__48CFD27E" Association="Self.FK__Entrades__user_i__48CFD27E">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Entrades" EntitySet="Entrades" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Esdevenim__room___440B1D61" Association="Self.FK__Esdevenim__room___440B1D61">
+            <End Role="Sales" EntitySet="Sales" />
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Esdevenim__user___44FF419A" Association="Self.FK__Esdevenim__user___44FF419A">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Esdeveniments" EntitySet="Esdeveniments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__inventory__3E52440B" Association="Self.FK__Sales__inventory__3E52440B">
+            <End Role="Inventari" EntitySet="Inventari" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Mensajes__sent_i__4E88ABD4" Association="Self.FK__Mensajes__sent_i__4E88ABD4">
+            <End Role="Usuaris" EntitySet="Usuaris" />
+            <End Role="Mensajes" EntitySet="Mensajes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="bookaroomModelStoreContainer" CdmEntityContainer="bookaroomEntities2">
+          <EntitySetMapping Name="Butaca">
+            <EntityTypeMapping TypeName="bookaroomModel.Butaca">
+              <MappingFragment StoreEntitySet="Butaca">
+                <ScalarProperty Name="seat_id" ColumnName="seat_id" />
+                <ScalarProperty Name="room_id" ColumnName="room_id" />
+                <ScalarProperty Name="row_number" ColumnName="row_number" />
+                <ScalarProperty Name="seat_number" ColumnName="seat_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Entrades">
+            <EntityTypeMapping TypeName="bookaroomModel.Entrades">
+              <MappingFragment StoreEntitySet="Entrades">
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="seat_id" ColumnName="seat_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Esdeveniments">
+            <EntityTypeMapping TypeName="bookaroomModel.Esdeveniments">
+              <MappingFragment StoreEntitySet="Esdeveniments">
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="room_id" ColumnName="room_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="capacity" ColumnName="capacity" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="event_image" ColumnName="event_image" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inventari">
+            <EntityTypeMapping TypeName="bookaroomModel.Inventari">
+              <MappingFragment StoreEntitySet="Inventari">
+                <ScalarProperty Name="inventory_id" ColumnName="inventory_id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mensajes">
+            <EntityTypeMapping TypeName="bookaroomModel.Mensajes">
+              <MappingFragment StoreEntitySet="Mensajes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="sent_id" ColumnName="sent_id" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="send_date" ColumnName="send_date" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sales">
+            <EntityTypeMapping TypeName="bookaroomModel.Sales">
+              <MappingFragment StoreEntitySet="Sales">
+                <ScalarProperty Name="room_id" ColumnName="room_id" />
+                <ScalarProperty Name="inventory_id" ColumnName="inventory_id" />
+                <ScalarProperty Name="dimensions" ColumnName="dimensions" />
+                <ScalarProperty Name="max_capacity" ColumnName="max_capacity" />
+                <ScalarProperty Name="num_seats" ColumnName="num_seats" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuaris">
+            <EntityTypeMapping TypeName="bookaroomModel.Usuaris">
+              <MappingFragment StoreEntitySet="Usuaris">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
