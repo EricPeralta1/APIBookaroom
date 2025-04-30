@@ -20,7 +20,29 @@ namespace APIBookaroom.Controllers
         // GET: api/Esdeveniments
         public IQueryable<Esdeveniments> GetEsdeveniments()
         {
-            return db.Esdeveniments;
+            db.Configuration.LazyLoadingEnabled = false;
+
+            var baseUrl = "http://10.0.2.60/apibookaroom/Images/";
+
+
+            var events = db.Esdeveniments
+                .Select(u => new
+                {
+                    event_id = u.event_id,
+                    room_id = u.room_id,
+                    user_id = u.user_id,
+                    capacity = u.capacity,
+                    start_date = u.start_date,
+                    end_date = u.end_date,
+                    price = u.price,
+                    name = u.name,
+                    description = u.description,
+                    event_image = baseUrl + u.event_image,
+                    active = u.active
+                })
+                .ToList();
+
+            return (IQueryable<Esdeveniments>)Ok(events);
         }
 
         // GET: api/Esdeveniments/5

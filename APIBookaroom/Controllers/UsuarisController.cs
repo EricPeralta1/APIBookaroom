@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using APIBookaroom.Models;
@@ -16,20 +17,22 @@ namespace APIBookaroom.Controllers
     {
         private bookaroomEntities2 db = new bookaroomEntities2();
 
-        // GET: api/Usuaris
-        public IQueryable<Usuaris> GetUsuaris()
+        // GET: api/users
+        [ResponseType(typeof(user))]
+        public IHttpActionResult Getuser()
         {
             db.Configuration.LazyLoadingEnabled = false;
 
-
-            var users = db.user
+            var users = db.Usuaris
                 .Select(u => new
                 {
-                    idUser = u.idUser,
-                    idRol = u.idRol,
+                    idUser = u.user_id,
                     name = u.name,
+                    surname = u.surname,
                     email = u.email,
-                    password = u.password
+                    password = u.password,
+                    role = u.role,
+                    active = u.active
                 })
                 .ToList();
 
@@ -38,15 +41,34 @@ namespace APIBookaroom.Controllers
 
         // GET: api/Usuaris/5
         [ResponseType(typeof(Usuaris))]
-        public IHttpActionResult GetUsuaris(int id)
+        public async Task<IHttpActionResult> GetUsuarisAsync(int id)
         {
-            Usuaris usuaris = db.Usuaris.Find(id);
-            if (usuaris == null)
+            IHttpActionResult result;
+
+            var user = await db.Usuaris
+                .Where(u => u.user_id == id)
+                .Select(u => new
+                {
+                    idUser = u.user_id,
+                    name = u.name,
+                    surname = u.surname,
+                    email = u.email,
+                    password = u.password,
+                    role = u.role,
+                    active = u.active
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
             {
-                return NotFound();
+                result = NotFound();
+            }
+            else
+            {
+                result = Ok(user);
             }
 
-            return Ok(usuaris);
+            return result; ;
         }
 
         // PUT: api/Usuaris/5
@@ -92,11 +114,22 @@ namespace APIBookaroom.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var allowedRoles = new List<string> { "Superadmin", "Common User", "Event Organizer" };
 
-            db.Usuaris.Add(usuaris);
-            db.SaveChanges();
+            if (db.Usuaris.Any(u => u.user_id == usuaris.user_id))
+            {
+                return Conflict();
+            } else if (db.Usuaris.Any((u => u.email == usuaris.email))){ 
+                return Conflict();
+            }else if (!allowedRoles.Contains(usuaris.role))
+            {
+                return BadRequest("El rol debe ser 'Superadmin', 'Common User' o 'Event Organizer'.");
+            } else {
+                db.Usuaris.Add(usuaris);
+                db.SaveChanges();
+                return CreatedAtRoute("DefaultApi", new { id = usuaris.user_id }, usuaris);
+            }
 
-            return CreatedAtRoute("DefaultApi", new { id = usuaris.user_id }, usuaris);
         }
 
         // DELETE: api/Usuaris/5
