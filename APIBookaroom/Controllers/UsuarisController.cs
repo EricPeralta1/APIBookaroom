@@ -26,7 +26,7 @@ namespace APIBookaroom.Controllers
             var users = db.Usuaris
                 .Select(u => new
                 {
-                    idUser = u.user_id,
+                    user_id = u.user_id,
                     name = u.name,
                     surname = u.surname,
                     email = u.email,
@@ -114,6 +114,7 @@ namespace APIBookaroom.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var allowedRoles = new List<string> { "Superadmin", "Common User", "Event Organizer" };
 
             if (db.Usuaris.Any(u => u.user_id == usuaris.user_id))
