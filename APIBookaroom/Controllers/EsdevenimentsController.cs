@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using APIBookaroom.Clases;
 using APIBookaroom.Models;
+using Newtonsoft.Json;
 
 namespace APIBookaroom.Controllers
 {
@@ -124,44 +126,6 @@ namespace APIBookaroom.Controllers
             await db.SaveChangesAsync();
 
             return Ok(esdeveniments);
-        }
-        [HttpPost]
-        [Route("SaveEvent")]
-        public async Task<IHttpActionResult> SaveEvent(Esdeveniments eventDetails)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (Request.Content.IsMimeMultipartContent())
-            {
-                var uploadDirectory = HttpContext.Current.Server.MapPath("~/images");
-
-                if (!Directory.Exists(uploadDirectory))
-                {
-                    Directory.CreateDirectory(uploadDirectory);
-                }
-
-                var provider = new MultipartFormDataStreamProvider(uploadDirectory);
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                var file = provider.FileData.FirstOrDefault();
-                if (file != null)
-                {
-                    string fileName = Path.GetFileName(file.LocalFileName);
-                    eventDetails.event_image = fileName;
-                }
-            }
-            else
-            {
-                return BadRequest("No se ha enviado una imagen.");
-            }
-
-            db.Esdeveniments.Add(eventDetails);
-            await db.SaveChangesAsync();
-
-            return Ok(eventDetails);
         }
 
         protected override void Dispose(bool disposing)
