@@ -18,9 +18,23 @@ namespace APIBookaroom.Controllers
         private bookaroomEntities2 db = new bookaroomEntities2();
 
         // GET: api/Entrades
-        public IQueryable<Entrades> GetEntrades()
+        [ResponseType(typeof(user))]
+        public IHttpActionResult Getuser()
         {
-            return db.Entrades;
+            db.Configuration.LazyLoadingEnabled = false;
+
+            var entrades = db.Entrades
+                .Select(u => new
+                {
+                    ticket_id = u.ticket_id,
+                    user_id = u.user_id,
+                    event_id = u.event_id,
+                    seat_id = u.seat_id,
+                    status = u.status
+                })
+                .ToList();
+
+            return Ok(entrades);
         }
 
         // GET: api/Entrades/5
@@ -32,6 +46,52 @@ namespace APIBookaroom.Controllers
             {
                 return NotFound();
             }
+
+            return Ok(entrades);
+        }
+
+        // GET: api/Entrades/fromevent/2
+        [HttpGet]
+        [Route("api/Entrades/fromevent/{eventId}")]
+        [ResponseType(typeof(object))]
+        public IHttpActionResult GetTicketsByEvent(int eventId)
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+
+            var entrades = db.Entrades
+                .Where(e => e.event_id == eventId)
+                .Select(u => new
+                {
+                    ticket_id = u.ticket_id,
+                    user_id = u.user_id,
+                    event_id = u.event_id,
+                    seat_id = u.seat_id,
+                    status = u.status
+                })
+                .ToList();
+
+            return Ok(entrades);
+        }
+
+        // GET: api/Entrades/fromuser/2
+        [HttpGet]
+        [Route("api/Entrades/fromuser/{userId}")]
+        [ResponseType(typeof(object))]
+        public IHttpActionResult GetTicketsFromUser(int userId)
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+
+            var entrades = db.Entrades
+                .Where(e => e.user_id == userId)
+                .Select(u => new
+                {
+                    ticket_id = u.ticket_id,
+                    user_id = u.user_id,
+                    event_id = u.event_id,
+                    seat_id = u.seat_id,
+                    status = u.status
+                })
+                .ToList();
 
             return Ok(entrades);
         }
