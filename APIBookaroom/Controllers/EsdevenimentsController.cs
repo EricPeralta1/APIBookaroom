@@ -26,7 +26,7 @@ namespace APIBookaroom.Controllers
         {
             db.Configuration.LazyLoadingEnabled = false;
 
-            var baseUrl = "http://10.0.2.2/apibookaroom/Images/";
+            var baseUrl = "http://10.0.2.60/apibookaroom/Images/";
 
             var events = db.Esdeveniments
     .AsEnumerable()

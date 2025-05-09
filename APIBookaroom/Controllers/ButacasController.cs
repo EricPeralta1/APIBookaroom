@@ -38,7 +38,7 @@ namespace APIBookaroom.Controllers
 
         // GET: api/Butacas/fromroom/5
         [HttpGet]
-        [Route("api/Entrades/fromroom/{roomId}")]
+        [Route("api/Butacas/fromroom/{roomId}")]
         [ResponseType(typeof(object))]
         public IHttpActionResult GetButacasFromRoom(int roomId)
         {
